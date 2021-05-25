@@ -31,19 +31,21 @@ def bashcommand(command):
 
 bam_file = sys.argv[1]
 bed_file = bam_file.split(".")[0] + ".cov.bed"
-outfile = bam_file.split(".")[0] + ".cov.out"
+outfile_1 = bam_file.split(".")[0] + ".raw.out"
+outfile_2 = bam_file.split(".")[0] + ".prop.out"
 
 bashcommand("bedtools genomecov -d -ibam %s > %s" % (bam_file, bed_file)) # run bedtools
 print("Finished bedtools")
 
 df = pd.read_csv(bed_file, sep='\t', names=['contig', 'position', 'coverage'])
+print(df)
 contigs = df['contig'].unique()
 
 lengths = {}
 covs = {}
 
 print("starting coverage calculations")
-with open (outfile, "a") as fout:
+with open (outfile_1, "a") as fout:
 	fout.write("contig\tlength\tavg_cov\n") 
 	for i in contigs: 
 		new_df = df[df["contig"].isin([i])]
@@ -57,11 +59,12 @@ with open (outfile, "a") as fout:
 chr = max(lengths.items(), key=operator.itemgetter(1))[0]
 print("setting chromosome to", chr)
 
-with open(outfile, "a") as fout:
+with open(outfile_2, "a") as fout:
 	fout.write("plasmid\tchr\tprop_cov\n")
 	for key in covs.keys():
 		if key != chr:
+			length = lengths[key]
 			cov = covs[key]
 			denom = covs[chr]
 			prop = int(cov)/int(denom)
-			fout.write("%s\t%s\t%s\n" % (key, chr, prop))
+			fout.write("%s\t%s\t%s\t%s\n" % (key, chr, prop, length))
