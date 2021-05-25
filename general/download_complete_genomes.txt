@@ -1,0 +1,10 @@
+Process for downloading complete genomes: 
+
+1. assembly_summary.txt file required from NCBI
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt
+
+2. grep 'Klebsiella pneumoniae' assembly_summary.txt | awk -F "\t" '$12=="Complete Genome" && $11=="latest"{print $20}' > ftpdirpaths
+
+3. awk 'BEGIN{FS=OFS="/";filesuffix="genomic.gbff.gz"}{ftpdir=$0;asm=$10;file=asm"_"filesuffix;print "wget "ftpdir,file}' ftpdirpaths > download_dbff_files.sh
+
+4. bash download_dbff_files.sh
