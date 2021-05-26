@@ -22,3 +22,5 @@ with open("differences_summary.txt", "w") as fout:
         print(i)
         fout.write("%s\n" % (i))
 
+same = set(list1) and set(list2)
+print("similarities = ", same)
