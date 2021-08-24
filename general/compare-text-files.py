@@ -17,10 +17,8 @@ for line2 in file2:
 
 dif = set(list1).symmetric_difference(set(list2))
 
-with open("differences_summary.txt", "w") as fout:
+with open("differences_summary.txt", "a") as fout:
     for i in dif:
-        print(i)
         fout.write("%s\n" % (i))
 
 same = set(list1) and set(list2)
-print("similarities = ", same)
