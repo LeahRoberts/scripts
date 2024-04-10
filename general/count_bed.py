@@ -16,3 +16,4 @@ with open(bed_file, "r") as fin:
 		count = count + diff
 
 print("Total = ", count)
+
